@@ -11,7 +11,7 @@ while IFS= read -r repo; do
 		>&2 echo "folder $basename_git already exists, skipping"
 		continue
 	fi
-	git clone $repo $basename_git
+	git clone --bare $repo $basename_git
 done
 
 if [ ! -z $1 ]; then
