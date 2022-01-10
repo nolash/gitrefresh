@@ -22,6 +22,12 @@ while test $# != 0; do
 			_path=1
 			shift
 			;;
+		-pp)
+			_fullpath=1
+			_path=1
+			shift
+			;;
+
 		*)
 			break
 			;;
@@ -70,6 +76,7 @@ git_at_to_https() {
 }
 
 wd=${1:-`pwd`}
+wd=$(realpath $wd)
 
 dbg 1 "root dir $wd"
 
@@ -106,7 +113,7 @@ for d in $(find . -type d -not -name ".git"); do
 			dbg 4 "skipping ssh url $origin"
 			popd > /dev/null
 			continue
-		elif [ -z $origin ]; then
+		elif [ -z "$origin" ]; then
 			dbg 4 "origin missing from repo $d"
 			dbg 4 "available remotes $(git remote -v)"
 			popd > /dev/null
@@ -118,8 +125,13 @@ for d in $(find . -type d -not -name ".git"); do
 			dbg 3 "changed $t -> $origin"
 		fi
 		if [ ! -z $_path ]; then
-			p=${d/$wd}
-			echo "$origin ${p:1} "
+			if [ -z $_fullpath ]; then
+				p=${d/$wd}
+			else
+				p=$wd/${d:2}
+			fi
+
+			echo -e "$origin\t$p"
 		else
 			echo "$origin"
 		fi
