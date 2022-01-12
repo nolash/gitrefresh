@@ -72,7 +72,7 @@ scan() {
 		p=`dirname $p`
 		return
 	fi
-	g=`git remote -v` 2> /dev/null
+	g=`git remote -v 2> /dev/null`
 	if [ "$?" -eq "0" ]; then
 		if [ "$cmd" == "init" ]; then
 			repo_init "$g" "$p"
