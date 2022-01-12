@@ -12,6 +12,18 @@ cat <file> | bash gitstart.sh
 
 --
 
-remote update all repos in file hierarchy
+remote update (fetch) all repos in file hierarchy
 
-bash gitrefresh.sh <path>
+bash gitrefresh.sh update <path>
+
+remote update and pull (current branch) all repos in file hierachy
+
+bash gitrefresh.sh pull <path>
+
+--
+
+CAVEATS:
+
+- Remote name is hardcoded to "origin."
+
+- May give strange results on repositories that are in detached head state

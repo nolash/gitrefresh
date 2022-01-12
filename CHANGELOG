@@ -1,0 +1,6 @@
+* 0.2.0
+	- Add gitstart.sh for initializing tree from gitlist.sh output (replaces gitrefresh.sh init)
+	- Add "pull" to gitrefresh.sh
+* 0.1.0
+	- gitrefresh.sh that can "init" and "update"
+	- gitlist.sh producing repository urls, optionally with file hierarchy path
