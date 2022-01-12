@@ -35,6 +35,10 @@ case "$cmd" in
 esac
 #echo using repo dir $(realpath $t)
 
+repo_pull() {
+	repo_update $1
+}
+
 repo_update() {
 	>&2 echo updating `pwd`
 	git remote update
