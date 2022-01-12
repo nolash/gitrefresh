@@ -46,7 +46,8 @@ repo_update() {
 #	fi
 	git fetch
 	if [ ! -z "$_pull" ]; then
-		branch=`git branch --show-current`
+		#branch=`git branch --show-current`
+		branch=`git rev-parse --abbrev-ref HEAD`
 		git pull --ff-only origin $branch
 	fi
 }
