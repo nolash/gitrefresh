@@ -33,7 +33,7 @@ case "$cmd" in
 		exit 1
 		break
 esac
->&2 echo using repo dir $t
+#echo using repo dir $(realpath $t)
 
 repo_update() {
 	>&2 echo updating `pwd`
