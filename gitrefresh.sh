@@ -16,12 +16,17 @@ if [ -z "$cmd" ]; then
 	exit 1
 fi
 
+_pull=
 case "$cmd" in
 	init)
 		t=`mktemp -d`
 		;;
 	update)
 		pushd $2
+		;;
+	pull)
+		pushd $2
+		_pull=1
 		;;
 	*)
 		>&2 echo invalid command: "$cmd"
@@ -40,6 +45,9 @@ repo_update() {
 #		sed -e "s/^.*:\(.*\)$/\1/g"
 #	fi
 	git fetch
+	if [ ! -z "$_pull" ]; then
+		git pull --ff-only
+	fi
 }
 
 repo_init() {
