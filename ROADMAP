@@ -2,3 +2,5 @@
 	- add debug logs
 * unscheduled
 	- handle detached head state
+	- check for access issues per repo and skip (and report) if unauthorized
+	- skip ssh:// scheme

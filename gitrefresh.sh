@@ -36,19 +36,19 @@ esac
 #echo using repo dir $(realpath $t)
 
 repo_update() {
-	>&2 echo updating `pwd`
-	git remote update
+	#>&2 echo updating `pwd`
+	git remote update > /dev/null
 #	if [ "$?" == "0" ]; then
 #		if [[ $remote =~ ^git ]]; then
 #			...
 #		fi
 #		sed -e "s/^.*:\(.*\)$/\1/g"
 #	fi
-	git fetch
+	git fetch > /dev/null
 	if [ ! -z "$_pull" ]; then
 		#branch=`git branch --show-current`
 		branch=`git rev-parse --abbrev-ref HEAD`
-		git pull --ff-only origin $branch
+		git pull --ff-only origin $branch > /dev/null
 	fi
 }
 
