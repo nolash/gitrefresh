@@ -38,7 +38,7 @@ esac
 repo_update() {
 	#>&2 echo updating `pwd`
 	git remote update > /dev/null 
-	if [ "$?" == "0" ]; then
+	if [ "$?" -gt "0" ]; then
 #		if [[ $remote =~ ^git ]]; then
 #			...
 #		fi
@@ -47,7 +47,7 @@ repo_update() {
 		return 1
 	fi
 	git fetch > /dev/null 
-	if [ "$?" == "0" ]; then
+	if [ "$?" -gt "0" ]; then
 		>&2 echo "fetch failed in $(pwd)"
 		return 1
 	fi
