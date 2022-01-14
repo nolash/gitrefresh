@@ -37,18 +37,22 @@ esac
 
 repo_update() {
 	#>&2 echo updating `pwd`
-	git remote update > /dev/null
-#	if [ "$?" == "0" ]; then
+	git remote update > /dev/null 
+	if [ "$?" == "0" ]; then
 #		if [[ $remote =~ ^git ]]; then
 #			...
 #		fi
 #		sed -e "s/^.*:\(.*\)$/\1/g"
-#	fi
-	git fetch > /dev/null
+		return 1
+	fi
+	git fetch > /dev/null 
+	if [ "$?" == "0" ]; then
+		return 1
+	fi
 	if [ ! -z "$_pull" ]; then
 		#branch=`git branch --show-current`
 		branch=`git rev-parse --abbrev-ref HEAD`
-		git pull --ff-only origin $branch > /dev/null
+		git pull --ff-only origin $branch > /dev/null 2>&1 
 	fi
 }
 
@@ -68,7 +72,7 @@ repo_init() {
 }
 
 scan() {
-	echo entering $d parent $p
+	#echo entering $d parent $p
 	pushd "$d" > /dev/null
 	if [ "$?" -ne "0" ]; then
 		p=`dirname $p`
@@ -92,7 +96,7 @@ scan() {
 	fi
 	popd > /dev/null
 	p=`dirname $p`
-	echo exiting, parent now $p
+	#echo exiting, parent now $p
 }
 
 pushd $wd
