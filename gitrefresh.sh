@@ -43,10 +43,12 @@ repo_update() {
 #			...
 #		fi
 #		sed -e "s/^.*:\(.*\)$/\1/g"
+		>&2 echo "remote update failed in $(pwd)"
 		return 1
 	fi
 	git fetch > /dev/null 
 	if [ "$?" == "0" ]; then
+		>&2 echo "fetch failed in $(pwd)"
 		return 1
 	fi
 	if [ ! -z "$_pull" ]; then
