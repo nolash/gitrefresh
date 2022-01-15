@@ -46,7 +46,7 @@ repo_update() {
 		>&2 echo "remote update failed in $(pwd)"
 		return 1
 	fi
-	git fetch > /dev/null 
+	git fetch > /dev/null 2>&1
 	if [ "$?" -gt "0" ]; then
 		>&2 echo "fetch failed in $(pwd)"
 		return 1
