@@ -2,7 +2,7 @@ if [ ! -z $1 ]; then
 	pushd $1
 fi
 
-if [ -z GITREFRESH_CHECKOUT ]; then
+if [ -z "$GITREFRESH_CHECKOUT" ]; then
 	gitargs='--bare'
 fi
 
@@ -21,7 +21,7 @@ while IFS= read -r repo; do
 		>&2 echo "folder $basename_git already exists, skipping"
 		continue
 	fi
-	echo "clone $url to $basename_git"
+	echo "clone $url $gitargs to $basename_git"
 	git clone $gitargs $url $basename_git
 done
 
