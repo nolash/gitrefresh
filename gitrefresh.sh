@@ -1,5 +1,55 @@
 #!/bin/bash
 
+bdbg_check_env_level() {
+	if [ ! -z "$BDBG_LEVEL" ]; then
+		_level=$BDBG_LEVEL
+	fi
+}
+
+bdbg_check_env_toggle() {
+	if [ ! -z "$BDBG" ]; then
+		if [ "$BDBG" -gt "0" ]; then
+			_debug=1
+		fi
+	fi
+}
+
+
+dbg() {
+	if [ "$1" -lt "$_level" ]; then
+		return 0
+	fi
+
+	case "$1" in
+		1)
+			lvl='debug'
+			clr='\e[0;96m'
+			;;
+		2)
+			lvl='info'
+			clr='\e[0;92m'
+			;;
+
+		3)
+			lvl='warn'
+			clr='\e[0;93m'
+			;;
+		4)
+			lvl='error'
+			clr='\e[0;91m'
+			;;
+
+	esac
+
+	if [ -z $_debug ]; then
+		return 0
+	fi
+	>&2 echo -e "$clr$(printf %-9s [$lvl])$2\e[0m"
+}
+
+bdbg_check_env_level
+bdbg_check_env_toggle
+
 wd=${2:-.}
 if [ ! -d $wd ]; then
 	>&2 echo $wd is not a directory
@@ -33,7 +83,33 @@ case "$cmd" in
 		exit 1
 		break
 esac
-#echo using repo dir $(realpath $t)
+
+
+repo_fetch_checkout() {
+	git fetch > /dev/null 2>&1
+	if [ "$?" -gt "0" ]; then
+		dbg 4 "fetch heads failed in $(pwd)"
+		return 1
+	fi
+	if [ ! -z "$_pull" ]; then
+		#branch=`git branch --show-current`
+		branch=`git rev-parse --abbrev-ref HEAD`
+		git pull --ff-only origin $branch > /dev/null 2>&1 
+	fi
+}
+
+repo_fetch_bare() {
+	git fetch origin 'refs/heads/*:refs/heads/*' > /dev/null 2>&1
+	if [ "$?" -gt "0" ]; then
+		>&2 echo "fetch heads failed in $(pwd)"
+		return 1
+	fi
+	git fetch origin 'refs/tags/*:refs/tags/*' > /dev/null 2>&1
+	if [ "$?" -gt "0" ]; then
+		>&2 echo "fetch heads failed in $(pwd)"
+		return 1
+	fi
+}
 
 repo_update() {
 	#>&2 echo updating `pwd`
@@ -46,15 +122,12 @@ repo_update() {
 		>&2 echo "remote update failed in $(pwd)"
 		return 1
 	fi
-	git fetch > /dev/null 2>&1
-	if [ "$?" -gt "0" ]; then
-		>&2 echo "fetch failed in $(pwd)"
-		return 1
-	fi
-	if [ ! -z "$_pull" ]; then
-		#branch=`git branch --show-current`
-		branch=`git rev-parse --abbrev-ref HEAD`
-		git pull --ff-only origin $branch > /dev/null 2>&1 
+	if [ -d ".git" ]; then
+		dbg 2 "updating work repo $remote -> $(pwd)"
+		repo_fetch_checkout
+	else
+		dbg 2 "updating bare repo $remote -> $(pwd)"
+		repo_fetch_bare
 	fi
 }
 
@@ -66,15 +139,17 @@ repo_init() {
 	_IFS=$IFS
 	IFS=$'\n'
 	for gr in ${gf[@]}; do
-		echo adding remote $gr
+		dbg 2 adding remote $gr
 		echo $gr | tr "\t" " " | xargs git remote add 
 	done
 	IFS=$_IFS
 	popd
 }
 
+p=$(realpath $p)
 scan() {
-	#echo entering $d parent $p
+	dd=$(realpath $d)
+	dbg 1 "entering $dd, parent $p"
 	pushd "$d" > /dev/null
 	if [ "$?" -ne "0" ]; then
 		p=`dirname $p`

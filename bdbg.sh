@@ -1,6 +1,23 @@
-if [ -z "$_level" ]; then
-	_level=3
-fi
+# This script normally lives in https://git.defalsify.org/bashbdbg
+# Licenced under Do What The Fuck You Want Licence v2
+# (c) 2021-2022 by lash 
+
+bdbg_check_env_level() {
+	if [ -z "$BDBG_LEVEL" ]; then
+		_level=3
+	else
+		_level=$BDBG_LEVEL
+	fi
+}
+
+bdbg_check_env_toggle() {
+	if [ ! -z "$BDBG" ]; then
+		if [ "$BDBG" -gt "0" ]; then
+			_debug=1
+		fi
+	fi
+}
+
 
 dbg() {
 	if [ "$1" -lt "$_level" ]; then
@@ -32,4 +49,14 @@ dbg() {
 		return 0
 	fi
 	>&2 echo -e "$clr$(printf %-9s [$lvl])$2\e[0m"
+}
+
+bdbg() {
+	if [ -z "$_level" ]; then
+		bdbg_check_env_level
+	fi
+
+	if [ -z "$_debug" ]; then
+		bdbg_check_env_toggle
+	fi
 }

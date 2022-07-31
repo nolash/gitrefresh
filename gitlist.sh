@@ -94,7 +94,6 @@ for d in $(find . -type d -not -name ".git"); do
 			used=''
 		fi
 	fi
-
 	pushd "$d" > /dev/null
 	if [ $(git rev-parse HEAD 2> /dev/null) ]; then
 		used=$d

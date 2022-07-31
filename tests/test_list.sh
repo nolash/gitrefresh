@@ -5,9 +5,9 @@ if [ ! -f ./gitrefresh.sh ]; then
 	exit 1;
 fi
 
-ts=$(mktemp -d)
-td=$(mktemp -d)
-r=$(mktemp)
+export ts=$(mktemp -d)
+export td=$(mktemp -d)
+export r=$(mktemp)
 pushd $ts
 
 ds=(a b c)
