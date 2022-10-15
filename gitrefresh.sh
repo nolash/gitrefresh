@@ -1,5 +1,7 @@
 #!/bin/bash
 
+_level=3
+
 bdbg_check_env_level() {
 	if [ ! -z "$BDBG_LEVEL" ]; then
 		_level=$BDBG_LEVEL
