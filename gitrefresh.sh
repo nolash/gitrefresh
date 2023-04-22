@@ -87,6 +87,13 @@ case "$cmd" in
 esac
 
 
+#repo_check_access() {
+#	statuscode=`curl ${repo_url}/info/refs?service=git-upload-pack -i -w '%{http_code}' -o /dev/null`
+#	if [ "$statuscode" -ne "200" ]; then
+#		# skip
+#	fi
+#}
+
 repo_fetch_checkout() {
 	git fetch > /dev/null 2>&1
 	if [ "$?" -gt "0" ]; then

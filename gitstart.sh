@@ -3,7 +3,7 @@ if [ ! -z $1 ]; then
 fi
 
 if [ -z "$GITREFRESH_CHECKOUT" ]; then
-	gitargs='--bare'
+	gitargs='--mirror'
 fi
 
 while IFS= read -r repo; do
